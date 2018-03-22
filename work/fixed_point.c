@@ -3,6 +3,10 @@
 //#define FIX_MPY(x,y)  ((short)(((int)x * (int)y)>>15))
 int FIX_MPY(short x,short y){
 	return ((short)(((int)x * (int)y)>>15));
+	
+//int FIX_MPY(int16_t x,int16_t y){ 
+//	return ((int16_t)(((int32_t)x * (int32_t)y)>>15));
+// }
 
 }
 
