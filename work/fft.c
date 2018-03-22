@@ -13,6 +13,12 @@ double gaussdouble(double,double);
 unsigned int taus();
 void randominit();
 
+void set_taus_seed();
+short FIX_MPY(short x,short y);
+int FIX_MPY25by18(int x,int y);
+short SAT_ADD16(short x,short y);
+int SAT_ADD25(int x,int y);
+
 int pow_2[MAXPOW];
 int pow_4[MAXPOW];
 
@@ -378,7 +384,7 @@ void fft_distortion_test(int N,                              // dimension of FFT
   // Make fixed-point versions of data
   for (i=0;i<N;i++) {
     data16[i].r = (short)(data[i].r*32767);
-    data16[i].i = (short)(data[i].i*32767);
+    data16[i].i = (shortrad)(data[i].i*32767);
     data32[i].r = (int)(data[i].r*32767);
     data32[i].i = (int)(data[i].i*32767);
 
@@ -426,7 +432,7 @@ void main(int argc, char *argv[])
 {
 
   int    N, radix=4,test;
-  int    i;
+  int   i;
   char scale[7],maxscale[7],MAXSHIFT;
   double maxSNR,input_dB;
   struct complex *data;
