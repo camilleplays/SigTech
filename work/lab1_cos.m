@@ -19,3 +19,5 @@ hold on
 plot(abs,ord1024);
 hold on
 plot(abs,ord4096);
+title("Q15, input : cos");
+legend('64','256','1024', '4096');

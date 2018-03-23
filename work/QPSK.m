@@ -14,5 +14,6 @@ hold on
 plot(abs,ord1024);
 hold on
 plot(abs,ord4096);
-
+title("Q15, input : QPSK");
+legend('64','256','1024', '4096');
 
