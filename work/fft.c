@@ -384,7 +384,7 @@ void fft_distortion_test(int N,                              // dimension of FFT
   // Make fixed-point versions of data
   for (i=0;i<N;i++) {
     data16[i].r = (short)(data[i].r*32767);
-    data16[i].i = (shortrad)(data[i].i*32767);
+    data16[i].i = (short)(data[i].i*32767);
     data32[i].r = (int)(data[i].r*32767);
     data32[i].i = (int)(data[i].i*32767);
 
