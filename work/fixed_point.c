@@ -1,7 +1,17 @@
 //Q15 multiply
 // x and y are 16-bit integers (Q15)
+<<<<<<< HEAD
 /*#define FIX_MPY(x,y)  ((short)(((int)x * (int)y)>>15))*/
 int16_t FIX_MPY(int16_t x, int16_t y) {
+=======
+//#define FIX_MPY(x,y)  ((short)(((int)x * (int)y)>>15))
+int FIX_MPY(short x,short y){
+	return ((short)(((int)x * (int)y)>>15));
+	
+//int FIX_MPY(int16_t x,int16_t y){ 
+//	return ((int16_t)(((int32_t)x * (int32_t)y)>>15));
+// }
+>>>>>>> eb36653bcb293a79148ffa1528029b6cf7388bbb
 
   return ((int16_t)(((int32_t)x * (int32_t)y)>>15));
 }
