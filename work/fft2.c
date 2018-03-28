@@ -401,7 +401,7 @@ void fft_distortion_test(int N,                              // dimension of FFT
 
   // Do Q24 FFT
   radix4_fixed_Q24xQ17(data32, N,scale,0);
-  bit_r4_reorder_fixed_Q24xQ17(data32, N,scale[6]);
+  bit_r4_reorder_fixed_Q17(data32, N);
 
 
   // Compute Distortion statistics
