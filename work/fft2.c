@@ -399,9 +399,9 @@ void fft_distortion_test(int N,                              // dimension of FFT
   }
   bit_r4_reorder(data, N);
 
-  // Do Q15 FFT
-  radix4_fixed_Q15(data16, N,scale,0);
-  bit_r4_reorder_fixed_Q15(data16, N,scale[6]);
+  // Do Q24 FFT
+  radix4_fixed_Q24xQ17(data32, N,scale,0);
+  bit_r4_reorder_fixed_Q24xQ17(data32, N,scale[6]);
 
 
   // Compute Distortion statistics
@@ -409,7 +409,7 @@ void fft_distortion_test(int N,                              // dimension of FFT
   mean_in = 0.0;
   for (i=0;i<N;i++) {
     mean_in += data[i].r*data[i].r + data[i].i*data[i].i;
-    mean_error += pow((data[i].r-((double)data16[i].r/32767.0)),2) + pow((data[i].i-((double)data16[i].i/32767.0)),2);
+    mean_error += pow((data[i].r-((double)data32[i].r/32767.0)),2) + pow((data[i].i-((double)data32[i].i/32767.0)),2);
   }
 
   SNR = 10*log10(mean_in/mean_error);
