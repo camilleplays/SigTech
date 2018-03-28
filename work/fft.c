@@ -438,6 +438,8 @@ void main(int argc, char *argv[])
   struct complex *data;
   struct complex16 *data16;
   struct complex32 *data32;
+  randominit();
+  set_taus_seed();
 
 
   if (argc!= 3) {
