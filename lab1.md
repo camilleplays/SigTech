@@ -100,14 +100,18 @@ In order to have real randomness, we need to call two functions: randominit and 
 
 ###Q15
 
-#### Q15_QPSK
-
-![Q15_QPSK_r.png](work/Q15_QPSK_r.png)
 
 
 #### Q15_cos
 
 ![Q15_cos_r.png](work/Q15_cos_r.png)
+
+
+#### Q15_QPSK
+
+![Q15_QPSK_r.png](work/Q15_QPSK_r.png)
+
+
 
 #### Q15_16QAM
 
@@ -120,7 +124,8 @@ In order to have real randomness, we need to call two functions: randominit and 
 We created another function fft2.c and modified the Makefile in order to obtain the results for Q24x17, since the original fft code was adapted to Q15.
 
 
-We replaced the function radix4_fixed_Q15 and bit_r4_reorder_fixed_Q15
+In the new fft2 code, we replaced the function radix4_fixed_Q15 and bit_r4_reorder_fixed_Q15 such as follow:
+
 ```c
 // Do Q24 FFT
 radix4_fixed_Q24xQ17(data32, N,scale,0);
@@ -134,12 +139,7 @@ for (i=0;i<N;i++) {
   mean_in += data[i].r*data[i].r + data[i].i*data[i].i;
   mean_error += pow((data[i].r-((double)data32[i].r/32767.0)),2) + pow((data[i].i-((double)data32[i].i/32767.0)),2);
 }
-
-
 ```
-### Q24xQ17_QPSK
-
-![Q24xQ17_cos_r.png](work/Q24xQ17_QPSK.png)
 
 
 ### Q24x17_cos
@@ -147,7 +147,20 @@ for (i=0;i<N;i++) {
 
 ![Q24xQ17_cos_r.png](work/Q24xQ17_cos.png)
 
+### Q24xQ17_QPSK
+
+![Q24xQ17_cos_r.png](work/Q24xQ17_QPSK.png)
+
+
+
 
 ### Q24x17QAM
 
 ![Q24xQ17_16QAM.png](work/Q24xQ17_16QAM.png)
+
+
+## Practical Dynamic range
+
+The dynamic range defines a threshold among which the SNR can be accepted.
+Therefore, it sets a range of input that can be passed in a particular case.
+The Signal to Noise ratio starts dropping significantly when it goes below 50 in every cases. However the input range is variable. In the cos curves for instance, the input range varies a lot depending on the number of sampling points (this is also the case for the other curves but not as significant). Besides the cos, the other curves present an input range for a valid SNR from about -30dB to -5dB.
