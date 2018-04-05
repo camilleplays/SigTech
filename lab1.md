@@ -98,47 +98,27 @@ void twiddle_fixed_Q17(struct complex32 *W, int N, double stuff)
 We aim to compare fixed-point versus floating-point for the fft. The floating-point method allows to represent a wider scale of numbers. However, in some cases, using fixed-point can have a better performance. The idea is to plot the SNR depending on the input in DB. The SNR being the Signal to Noise Ratio, in which the Signal is the data resulting from floating-point processing and the Noise is the distortion (that is to say the difference because the floating-point result and the fixed-point one).
 In order to have real randomness, we need to call two functions: randominit and set_taus_seed which generate random numbers starting from a different seed every time.
 
+###Q15
 
-### Q15_QPSK
+#### Q15_QPSK
 
 ![Q15_QPSK_r.png](work/Q15_QPSK_r.png)
 
 
-### Q15_cos
+#### Q15_cos
 
 ![Q15_cos_r.png](work/Q15_cos_r.png)
 
-### Q15_16QAM
+#### Q15_16QAM
 
 
 ![Q15_16QAM_r.png](work/Q15_16QAM_r.png)
 
-## Q24x17
-We created another function fft2.c and modified the Makefile in order to obtain the results for Q24x17
 
 
-We modified fft2.c on additions
+### Q24x17
+We created another function fft2.c and modified the Makefile in order to obtain the results for Q24x17, since the original fft code was adapted to Q15.
 
-```c
-bfly[0].r = SAT_ADD25(SAT_ADD25(x[n2].r,x[N2 + n2].r),SAT_ADD25(x[2*N2 + n2].r,x[3*N2 + n2].r));
-bfly[0].i = SAT_ADD25(SAT_ADD25(x[n2].i,x[N2 + n2].i),SAT_ADD25(x[2*N2 + n2].i,x[3*N2 + n2].i));
-bfly[1].r = SAT_ADD25(SAT_ADD25(x[n2].r,x[N2 + n2].i),-SAT_ADD25(x[2*N2 + n2].r,x[3*N2 + n2].i));
-bfly[1].i = SAT_ADD25(SAT_ADD25(x[n2].i,-x[N2 + n2].r),SAT_ADD25(-x[2*N2 + n2].i,x[3*N2 + n2].r));
-
-bfly[2].r = SAT_ADD25(SAT_ADD25(x[n2].r,-x[N2 + n2].r),SAT_ADD25(x[2*N2 + n2].r,-x[3*N2 + n2].r));
-bfly[2].i = SAT_ADD25(SAT_ADD25(x[n2].i,-x[N2 + n2].i),SAT_ADD25(x[2*N2 + n2].i,-x[3*N2 + n2].i));
-
-bfly[3].r = SAT_ADD25(SAT_ADD25(x[n2].r,-x[N2 + n2].i),SAT_ADD25(-x[2*N2 + n2].r,x[3*N2 + n2].i));
-bfly[3].i = SAT_ADD25(SAT_ADD25(x[n2].i,x[N2 + n2].r),-SAT_ADD25(x[2*N2 + n2].i,x[3*N2 + n2].r));
-```
-```c
-for (k1=0; k1<N1; k1++)
-{
-twiddle_fixed_Q17(&W, N, (double)k1*(double)n2);
-x[n2 + N2*k1].r = SAT_ADD25(FIX_MPY25by18(bfly[k1].r,W.r),-FIX_MPY25by18(bfly[k1].i,W.i));
-x[n2 + N2*k1].i = SAT_ADD25(FIX_MPY25by18(bfly[k1].i,W.r),FIX_MPY25by18(bfly[k1].r,W.i));
-}
-```
 
 We replaced the function radix4_fixed_Q15 and bit_r4_reorder_fixed_Q15
 ```c
