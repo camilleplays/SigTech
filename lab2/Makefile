@@ -7,7 +7,7 @@ UTIL_OBJS += lab2.o
 
 #
 
-all: fft
+all: lab2
 
 OBJ = $(UTIL_OBJS)
 $(OBJ) : %.o : %.c
