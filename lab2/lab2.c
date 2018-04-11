@@ -7,6 +7,7 @@
 #include <tmmintrin.h>
 #include <immintrin.h>
 #include "time_meas.h"
+#include <malloc.h>
 
 
 
@@ -85,14 +86,19 @@ void generate_random(int16_t *x, int16_t *y, int N){
 
 
 
-int main(int argc, char **argv) {
+int main() {
 
-  int N = atoi(argv[1]);
+	int N = 50;
 
   int16_t *x, *y, *z;
-  x=malloc((N + 32) * sizeof(int16_t));
-  y=malloc((N + 32) * sizeof(int16_t));
-  z=malloc((N + 32) * sizeof(int16_t));
+  x=(int16_t *)memalign(32, 16);
+	y=(int16_t *)memalign(32, 16);
+	z=(int16_t *)memalign(32, 16);
+
+
+	// x=malloc((N + 32) *sizeof(int16_t));
+	// y=malloc((N + 32) *sizeof(int16_t));
+	// z=malloc((N + 32) *sizeof(int16_t));
 
   generate_random(x, y, N);
   componentwise_multiply_real_scalar(x, y, z, N);
@@ -100,14 +106,22 @@ int main(int argc, char **argv) {
   componentwise_multiply_real_avx2(x, y, z, N);
   time_stats_t ts;
 
-  for (int i = 0; i<1000; i++){
+	FILE *file;
+	file=fopen("scalar_version","w+");
+
+  for (int i = 0; i<N; i++){
     reset_meas(&ts);
-    for (int j = 0; j<1000000; j++){
+    for (int j = 0; j<1000; j++){
       start_meas(&ts);
       componentwise_multiply_real_scalar(x,y,z,i);
       stop_meas(&ts);
     }
+
+	fprintf(file, "%lld\n", ts.diff);
   }
+
+	fclose(file);
+
   return(0);
 
 
