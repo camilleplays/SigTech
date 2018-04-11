@@ -97,8 +97,16 @@ int main(int argc, char **argv) {
   componentwise_multiply_real_scalar(x, y, z, N);
   componentwise_multiply_real_sse4(x, y, z, N);
   componentwise_multiply_real_avx2(x, y, z, N);
+  time_stats_t ts;
 
-
+  for (int i = 0, i<1000, i++){
+    reset_meas(ts);
+    for (int j = 0, j<1000000, j++){
+      start_meas(ts);
+      componentwise_multiply_real_scalar(x,y,z,i);
+      stop_meas(ts);
+    }
+  }
   return(0);
 
 
