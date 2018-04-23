@@ -88,7 +88,7 @@ void generate_random(int16_t *x, int16_t *y, int N){
 
 int main() {
 
-	int N = 1;
+	int N = 100;
 
   int16_t *x, *y, *z;
   // x=(int16_t *)memalign(16, N << 1);
@@ -101,7 +101,7 @@ int main() {
 	z=malloc((N + 160) *sizeof(int16_t));
 
   generate_random(x, y, N);
-  componentwise_multiply_real_scalar(x, y, z, N);
+ // componentwise_multiply_real_scalar(x, y, z, N);
 
 
 
@@ -111,8 +111,8 @@ int main() {
 	// z=(int16_t *)memalign(64, 32);
 
 
-	generate_random(x, y, N);
-  componentwise_multiply_real_sse4(x, y, z, N);
+//	generate_random(x, y, N);
+ // componentwise_multiply_real_sse4(x, y, z, N);
 
 	//
 	// void free(void *x);
@@ -127,7 +127,7 @@ int main() {
 
 
 	generate_random(u, v, N);
-  componentwise_multiply_real_avx2(u, v, w, N);
+ // componentwise_multiply_real_avx2(u, v, w, N);
 
 
 
@@ -136,34 +136,34 @@ int main() {
   time_stats_t ts;
 
 	FILE *file;
+
 	file=fopen("scalar_version","w+");
 
-  for (int i = 0; i<N; i++){
-    reset_meas(&ts);
-    for (int j = 0; j<1000; j++){
-      start_meas(&ts);
-      componentwise_multiply_real_scalar(x,y,z,i);
-      stop_meas(&ts);
-    }
+ 	 for (int i = 0; i<N; i++){
+		reset_meas(&ts);
+    		for (int j = 0; j<1000; j++){
+      			start_meas(&ts);
+      			componentwise_multiply_real_scalar(x,y,z,i);
+      			stop_meas(&ts);
+    		}
 
-	fprintf(file, "%lld\n", ts.diff);
-  }
+		fprintf(file, "%lld\n", ts.diff);
+  	}	
 
 	fclose(file);
 
 
         file=fopen("ssE4","w+");
 
-  for (int i = 0; i<N; i++){
-    reset_meas(&ts);
-    for (int j = 0; j<1000; j++){
-      start_meas(&ts);
-      componentwise_multiply_real_sse4(x,y,z,i);
-      stop_meas(&ts);
-    }
-
-        fprintf(file, "%lld\n", ts.diff);
-  }
+	for (int i = 0; i<N; i++){
+   	 	reset_meas(&ts);
+    		for (int j = 0; j<1000; j++){
+      			start_meas(&ts);
+      			componentwise_multiply_real_sse4(x,y,z,i);
+      			stop_meas(&ts);
+    		}
+        	fprintf(file, "%lld\n", ts.diff);
+  	}
 
         fclose(file);
 
@@ -172,16 +172,15 @@ int main() {
 
         file=fopen("avx2","w+");
 
-  for (int i = 0; i<N; i++){
-    reset_meas(&ts);
-    for (int j = 0; j<1000; j++){
-      start_meas(&ts);
-      componentwise_multiply_real_avx2(u,v,w,i);
-      stop_meas(&ts);
-    }
-
-        fprintf(file, "%lld\n", ts.diff);
-  }
+  	for (int i = 0; i<N; i++){
+    		reset_meas(&ts);
+    		for (int j = 0; j<1000; j++){
+			start_meas(&ts);
+      			componentwise_multiply_real_avx2(u,v,w,i);
+      			stop_meas(&ts);
+    		}	
+        	fprintf(file, "%lld\n", ts.diff);
+  	}
 
         fclose(file);
 	
