@@ -151,9 +151,47 @@ int main() {
 
 	fclose(file);
 
+
+        file=fopen("ssE4","w+");
+
+  for (int i = 0; i<N; i++){
+    reset_meas(&ts);
+    for (int j = 0; j<1000; j++){
+      start_meas(&ts);
+      componentwise_multiply_real_sse4(x,y,z,i);
+      stop_meas(&ts);
+    }
+
+        fprintf(file, "%lld\n", ts.diff);
+  }
+
+        fclose(file);
+
+
+ 
+
+        file=fopen("avx2","w+");
+
+  for (int i = 0; i<N; i++){
+    reset_meas(&ts);
+    for (int j = 0; j<1000; j++){
+      start_meas(&ts);
+      componentwise_multiply_real_avx2(u,v,w,i);
+      stop_meas(&ts);
+    }
+
+        fprintf(file, "%lld\n", ts.diff);
+  }
+
+        fclose(file);
+	
+
 	void free(void *x);
 	void free(void *y);
 	void free(void *z);
+	void free(void *u);
+	void free(void *v);
+	void free(void *w);
 
   return(0);
 
