@@ -50,6 +50,7 @@ void componentwise_multiply_real_scalar(int16_t *x,int16_t *y,int16_t *z,uint16_
     z[i]=FIX_MPY(x[i],y[i]);
   }
 
+
 }
 
 // routines to be written
@@ -110,27 +111,27 @@ int main() {
 	// z=(int16_t *)memalign(64, 32);
 
 
-//	generate_random(x, y, N);
+ // generate_random(x, y, N);
  // componentwise_multiply_real_sse4(x, y, z, N);
 
-	//
+
 	// void free(void *x);
 	// void free(void *y);
 	// void free(void *z);
-	//
-	//
+
+
   int16_t *u, *v, *w;
 	u=malloc((N + 288) *sizeof(int16_t));
 	v=malloc((N + 288) *sizeof(int16_t));
 	w=malloc((N + 288) *sizeof(int16_t));
 
 
-	generate_random(u, v, N);
- printf("%d\n", u[4]);
-  componentwise_multiply_real_avx2(u, v, w, 10);
+	// generate_random(u, v, N);
+  // printf("%d\n", u[4]);
+  // componentwise_multiply_real_avx2(u, v, w, 10);
 
 
-//componentwise_multiply_real_avx2(u,v,w,N);
+  //componentwise_multiply_real_avx2(u,v,w,N);
 
 
   time_stats_t ts;
@@ -148,6 +149,7 @@ int main() {
     		}
 
 		fprintf(file, "%lld\n", ts.diff);
+
   	}
 
 	fclose(file);
