@@ -148,7 +148,7 @@ int main() {
     		}
 
 		fprintf(file, "%lld\n", ts.diff);
-  	}	
+  	}
 
 	fclose(file);
 
@@ -168,22 +168,25 @@ int main() {
         fclose(file);
 
 
- 
 
-        file=fopen("avx2","w+");
+
+
 
   	for (int i = 0; i<N; i++){
     		reset_meas(&ts);
     		for (int j = 0; j<1000; j++){
-			start_meas(&ts);
+						start_meas(&ts);
       			componentwise_multiply_real_avx2(u,v,w,i);
       			stop_meas(&ts);
-    		}	
+    		}
+				  file=fopen("avx2","w+");
         	fprintf(file, "%lld\n", ts.diff);
+					fclose(file);
+					printf("%d\n",u[i]);
   	}
 
-        fclose(file);
-	
+
+
 
 	void free(void *x);
 	void free(void *y);
