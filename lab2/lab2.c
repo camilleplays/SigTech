@@ -70,9 +70,8 @@ void componentwise_multiply_real_avx2(int16_t *x,int16_t *y,int16_t *z,uint16_t 
 __m256i *x256 = (__m256i *)x;
 __m256i *y256 = (__m256i *)y;
 __m256i *z256 = (__m256i *)z;
-
 for (int i=0; i<N; i++){
-  z256[i] = _mm256_mulhrs_epi16(x256[i], y256[i]);
+  z256[i] = _mm256_mullo_epi16(x256[i], y256[i]);
 }
 }
 
@@ -83,7 +82,6 @@ void generate_random(int16_t *x, int16_t *y, int N){
     y[i]=rand();
   }
 }
-
 
 
 int main() {
@@ -101,6 +99,7 @@ int main() {
 	z=malloc((N + 160) *sizeof(int16_t));
 
   generate_random(x, y, N);
+ // printf("%d\n", x[4]);
  // componentwise_multiply_real_scalar(x, y, z, N);
 
 
@@ -127,10 +126,11 @@ int main() {
 
 
 	generate_random(u, v, N);
- // componentwise_multiply_real_avx2(u, v, w, N);
+ printf("%d\n", u[4]);
+  componentwise_multiply_real_avx2(u, v, w, 10);
 
 
-
+//componentwise_multiply_real_avx2(u,v,w,N);
 
 
   time_stats_t ts;
