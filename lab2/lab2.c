@@ -87,7 +87,7 @@ void generate_random(int16_t *x, int16_t *y, int N){
 
 int main() {
 
-	int N = 100;
+	int N = 200;
 
   int16_t *x, *y, *z;
   // x=(int16_t *)memalign(16, N << 1);
@@ -95,9 +95,9 @@ int main() {
 	// z=(int16_t *)memalign(16, N << 1);
 
 
-	x=malloc((N + 160) *sizeof(int16_t));
-	y=malloc((N + 160) *sizeof(int16_t));
-	z=malloc((N + 160) *sizeof(int16_t));
+	x=malloc((N*160) *sizeof(int16_t));
+	y=malloc((N*160) *sizeof(int16_t));
+	z=malloc((N*160) *sizeof(int16_t));
 
   generate_random(x, y, N);
  // printf("%d\n", x[4]);
@@ -119,15 +119,17 @@ int main() {
 	// void free(void *y);
 	// void free(void *z);
 
-
   int16_t *u, *v, *w;
-	u=malloc((N + 288) *sizeof(int16_t));
-	v=malloc((N + 288) *sizeof(int16_t));
-	w=malloc((N + 288) *sizeof(int16_t));
+	u=aligned_alloc(32,(N + 32) *sizeof(int16_t));
+	v=aligned_alloc(32,(N+ 32) *sizeof(int16_t));
+	w=aligned_alloc(32,(N+ 32) *sizeof(int16_t));
 
 
-	// generate_random(u, v, N);
-  // printf("%d\n", u[4]);
+ generate_random(u, v, N);
+// for (int i = 0; i<N; i++){
+//	 printf("%d", u[i]);
+//	printf("%d\n", v[i]);
+//}
   // componentwise_multiply_real_avx2(u, v, w, 10);
 
 
@@ -137,7 +139,6 @@ int main() {
   time_stats_t ts;
 
 	FILE *file;
-
 	file=fopen("scalar_version","w+");
 
  	 for (int i = 0; i<N; i++){
@@ -164,7 +165,7 @@ int main() {
       			componentwise_multiply_real_sse4(x,y,z,i);
       			stop_meas(&ts);
     		}
-        	fprintf(file, "%lld\n", ts.diff);
+		fprintf(file, "%lld\n", ts.diff);
   	}
 
         fclose(file);
@@ -173,18 +174,17 @@ int main() {
 
 
 
-
   	for (int i = 0; i<N; i++){
     		reset_meas(&ts);
     		for (int j = 0; j<1000; j++){
-						start_meas(&ts);
+			start_meas(&ts);
       			componentwise_multiply_real_avx2(u,v,w,i);
       			stop_meas(&ts);
     		}
-				  file=fopen("avx2","w+");
+		file = fopen("test","a+");
         	fprintf(file, "%lld\n", ts.diff);
-					fclose(file);
-					printf("%d\n",u[i]);
+		fclose(file);
+		printf("%d\n", i);
   	}
 
 
