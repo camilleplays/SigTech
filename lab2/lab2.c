@@ -87,7 +87,7 @@ void generate_random(int16_t *x, int16_t *y, int N){
 
 int main() {
 
-	int N = 200;
+	int N = 1000;
 
   int16_t *x, *y, *z;
   // x=(int16_t *)memalign(16, N << 1);
@@ -120,9 +120,9 @@ int main() {
 	// void free(void *z);
 
   int16_t *u, *v, *w;
-	u=aligned_alloc(32,(N + 32) *sizeof(int16_t));
-	v=aligned_alloc(32,(N+ 32) *sizeof(int16_t));
-	w=aligned_alloc(32,(N+ 32) *sizeof(int16_t));
+	u=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
+	v=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
+	w=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
 
 
  generate_random(u, v, N);
@@ -143,13 +143,13 @@ int main() {
 
  	 for (int i = 0; i<N; i++){
 		reset_meas(&ts);
-    		for (int j = 0; j<1000; j++){
+    		for (int j = 0; j<10000; j++){
       			start_meas(&ts);
       			componentwise_multiply_real_scalar(x,y,z,i);
       			stop_meas(&ts);
     		}
 
-		fprintf(file, "%lld\n", ts.diff);
+		fprintf(file, "%lld\n", ts.diff/10000);
 
   	}
 
@@ -160,12 +160,12 @@ int main() {
 
 	for (int i = 0; i<N; i++){
    	 	reset_meas(&ts);
-    		for (int j = 0; j<1000; j++){
+    		for (int j = 0; j<10000; j++){
       			start_meas(&ts);
       			componentwise_multiply_real_sse4(x,y,z,i);
       			stop_meas(&ts);
     		}
-		fprintf(file, "%lld\n", ts.diff);
+		fprintf(file, "%lld\n", ts.diff/10000);
   	}
 
         fclose(file);
@@ -176,13 +176,13 @@ int main() {
 
   	for (int i = 0; i<N; i++){
     		reset_meas(&ts);
-    		for (int j = 0; j<1000; j++){
+    		for (int j = 0; j<10000; j++){
 			start_meas(&ts);
       			componentwise_multiply_real_avx2(u,v,w,i);
       			stop_meas(&ts);
     		}
 		file = fopen("test","a+");
-        	fprintf(file, "%lld\n", ts.diff);
+        	fprintf(file, "%lld\n", ts.diff/10000);
 		fclose(file);
 		printf("%d\n", i);
   	}
@@ -190,12 +190,12 @@ int main() {
 
 
 
-	void free(void *x);
-	void free(void *y);
-	void free(void *z);
-	void free(void *u);
-	void free(void *v);
-	void free(void *w);
+	free(x);
+	free(y);
+	free(z);
+	free(u);
+	free(v);
+	free(w);
 
   return(0);
 
