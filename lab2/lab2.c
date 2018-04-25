@@ -77,6 +77,16 @@ for (int i=0; i<N; i++){
 }
 
 
+void componentwise_multiply_real_avx2_hrs(int16_t *x,int16_t *y,int16_t *z,uint16_t N) {
+
+__m256i *x256 = (__m256i *)x;
+__m256i *y256 = (__m256i *)y;
+__m256i *z256 = (__m256i *)z;
+for (int i=0; i<N; i++){
+  z256[i] = _mm256_mulhrs_epi16(x256[i], y256[i]);
+}
+}
+
 void generate_random(int16_t *x, int16_t *y, int N){
   for (int i=0; i<N; i++){
     x[i]=rand();
@@ -139,37 +149,37 @@ int main() {
   time_stats_t ts;
 
 	FILE *file;
-	file=fopen("scalar_version","w+");
-
- 	 for (int i = 0; i<N; i++){
-		reset_meas(&ts);
-    		for (int j = 0; j<10000; j++){
-      			start_meas(&ts);
-      			componentwise_multiply_real_scalar(x,y,z,i);
-      			stop_meas(&ts);
-    		}
-
-		fprintf(file, "%lld\n", ts.diff/10000);
-
-  	}
-
-	fclose(file);
-
-
-        file=fopen("ssE4","w+");
-
-	for (int i = 0; i<N; i++){
-   	 	reset_meas(&ts);
-    		for (int j = 0; j<10000; j++){
-      			start_meas(&ts);
-      			componentwise_multiply_real_sse4(x,y,z,i);
-      			stop_meas(&ts);
-    		}
-		fprintf(file, "%lld\n", ts.diff/10000);
-  	}
-
-        fclose(file);
-
+	// file=fopen("scalar_version","w+");
+	//
+ 	//  for (int i = 0; i<N; i++){
+	// 	reset_meas(&ts);
+  //   		for (int j = 0; j<10000; j++){
+  //     			start_meas(&ts);
+  //     			componentwise_multiply_real_scalar(x,y,z,i);
+  //     			stop_meas(&ts);
+  //   		}
+	//
+	// 	fprintf(file, "%lld\n", ts.diff/10000);
+	//
+  // 	}
+	//
+	// fclose(file);
+	//
+	//
+  //       file=fopen("ssE4","w+");
+	//
+	// for (int i = 0; i<N; i++){
+  //  	 	reset_meas(&ts);
+  //   		for (int j = 0; j<10000; j++){
+  //     			start_meas(&ts);
+  //     			componentwise_multiply_real_sse4(x,y,z,i);
+  //     			stop_meas(&ts);
+  //   		}
+	// 	fprintf(file, "%lld\n", ts.diff/10000);
+  // 	}
+	//
+  //       fclose(file);
+	//
 
 
 
@@ -187,7 +197,18 @@ int main() {
 		printf("%d\n", i);
   	}
 
-
+		for (int i = 0; i<N; i++){
+    		reset_meas(&ts);
+    		for (int j = 0; j<10000; j++){
+			start_meas(&ts);
+      			componentwise_multiply_real_avx2_hrs(u,v,w,i);
+      			stop_meas(&ts);
+    		}
+		file = fopen("test2","a+");
+        	fprintf(file, "%lld\n", ts.diff/10000);
+		fclose(file);
+		printf("%d\n", i);
+  	}
 
 
 	free(x);
