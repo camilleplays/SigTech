@@ -10,11 +10,17 @@
 #include <malloc.h>
 
 
+//
+// int FIX_MPY(short x,short y){
+// 	return ((short)(((int)x * (int)y)>>15));
+// }
+
+
+
 
 int FIX_MPY(short x,short y){
-	return ((short)(((int)x * (int)y)>>15));
+	return ((int32_t)x* (int32_t)y )>>15;
 }
-
 
 // example SIMD macros, not necessary to be used, write your own
 
@@ -129,7 +135,7 @@ int main() {
 	// x=malloc((N*160) *sizeof(int16_t));
 	// y=malloc((N*160) *sizeof(int16_t));
 	// z=malloc((N*160) *sizeof(int16_t));
-
+	//
 	x=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
 	y=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
 	z=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
@@ -221,17 +227,17 @@ int main() {
 		fclose(file);
   	}
 
-		// for (int i = 0; i<N; i++){
-    // 		reset_meas(&ts);
-    // 		for (int j = 0; j<10000; j++){
-		// 	start_meas(&ts);
-    //   			componentwise_multiply_real_avx2_hrs(u,v,w,i);
-    //   			stop_meas(&ts);
-    // 		}
-		// file = fopen("test2","a+");
-    //     	fprintf(file, "%lld\n", ts.diff/10000);
-		// fclose(file);
-  	// }
+		for (int i = 0; i<N; i++){
+    		reset_meas(&ts);
+    		for (int j = 0; j<10000; j++){
+			start_meas(&ts);
+      			componentwise_multiply_real_avx2_hrs(u,v,w,i);
+      			stop_meas(&ts);
+    		}
+		file = fopen("test2","a+");
+        	fprintf(file, "%lld\n", ts.diff/10000);
+		fclose(file);
+  	}
 
 
 	free(x);

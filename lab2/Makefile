@@ -1,6 +1,6 @@
 CC = gcc
 
-CFLAGS = -Wall -mmmx -msse -msse2 -mssse3 -msse4 -mavx2 -O3 -ggdb3
+CFLAGS = -Wall -mmmx -msse -msse2 -mssse3 -msse4 -mavx2 -ggdb3
 
 # Utility routines
 UTIL_OBJS += lab2.o
