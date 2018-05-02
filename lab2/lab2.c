@@ -54,6 +54,7 @@ void componentwise_multiply_real_scalar(int16_t *x,int16_t *y,int16_t *z,uint16_
 
   for(int i=0; i<N; i++){
     z[i]=FIX_MPY(x[i],y[i]);
+		// printf("z[%d] : %d\n", i, z[i]);
   }
 
 
@@ -227,17 +228,17 @@ int main() {
 		fclose(file);
   	}
 
-		for (int i = 0; i<N; i++){
-    		reset_meas(&ts);
-    		for (int j = 0; j<10000; j++){
-			start_meas(&ts);
-      			componentwise_multiply_real_avx2_hrs(u,v,w,i);
-      			stop_meas(&ts);
-    		}
-		file = fopen("test2","a+");
-        	fprintf(file, "%lld\n", ts.diff/10000);
-		fclose(file);
-  	}
+		// for (int i = 0; i<N; i++){
+    // 		reset_meas(&ts);
+    // 		for (int j = 0; j<10000; j++){
+		// 	start_meas(&ts);
+    //   			componentwise_multiply_real_avx2_hrs(u,v,w,i);
+    //   			stop_meas(&ts);
+    // 		}
+		// file = fopen("test2","a+");
+    //     	fprintf(file, "%lld\n", ts.diff/10000);
+		// fclose(file);
+  	// }
 
 
 	free(x);
