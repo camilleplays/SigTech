@@ -60,8 +60,15 @@ __m128i *x128 = (__m128i *)x;
 __m128i *y128 = (__m128i *)y;
 __m128i *z128 = (__m128i *)z;
 
-for (int i=0; i<N; i++){
+for (int i=0; i<N; i+=8){
   z128[i] = _mm_mulhrs_epi16(x128[i], y128[i]);
+	z128[i+1] = _mm_mulhrs_epi16(x128[i], y128[i+1]);
+	z128[i+2] = _mm_mulhrs_epi16(x128[i], y128[i+2]);
+	z128[i+3] = _mm_mulhrs_epi16(x128[i], y128[i+3]);
+	z128[i+4] = _mm_mulhrs_epi16(x128[i], y128[i+4]);
+	z128[i+5] = _mm_mulhrs_epi16(x128[i], y128[i+5]);
+	z128[i+6] = _mm_mulhrs_epi16(x128[i], y128[i+6]);
+	z128[i+7] = _mm_mulhrs_epi16(x128[i], y128[i+7]);
 }
 }
 
@@ -71,8 +78,15 @@ void componentwise_multiply_real_avx2(int16_t *x,int16_t *y,int16_t *z,uint16_t 
 __m256i *x256 = (__m256i *)x;
 __m256i *y256 = (__m256i *)y;
 __m256i *z256 = (__m256i *)z;
-for (int i=0; i<N; i++){
+for (int i=0; i<N; i+=8){
   z256[i] = _mm256_mullo_epi16(x256[i], y256[i]);
+	z256[i+1] = _mm256_mullo_epi16(x256[i], y256[i+1]);
+	z256[i+2] = _mm256_mullo_epi16(x256[i], y256[i+2]);
+	z256[i+3] = _mm256_mullo_epi16(x256[i], y256[i+3]);
+	z256[i+4] = _mm256_mullo_epi16(x256[i], y256[i+4]);
+	z256[i+5] = _mm256_mullo_epi16(x256[i], y256[i+5]);
+	z256[i+6] = _mm256_mullo_epi16(x256[i], y256[i+6]);
+	z256[i+7] = _mm256_mullo_epi16(x256[i], y256[i+7]);
 }
 }
 
@@ -82,8 +96,15 @@ void componentwise_multiply_real_avx2_hrs(int16_t *x,int16_t *y,int16_t *z,uint1
 __m256i *x256 = (__m256i *)x;
 __m256i *y256 = (__m256i *)y;
 __m256i *z256 = (__m256i *)z;
-for (int i=0; i<N; i++){
-  z256[i] = _mm256_mulhrs_epi16(x256[i], y256[i]);
+for (int i=0; i<N; i+=8){
+	z256[i] = _mm256_mulhrs_epi16(x256[i], y256[i]);
+	z256[i+1] = _mm256_mulhrs_epi16(x256[i], y256[i+1]);
+	z256[i+2] = _mm256_mulhrs_epi16(x256[i], y256[i+2]);
+	z256[i+3] = _mm256_mulhrs_epi16(x256[i], y256[i+3]);
+	z256[i+4] = _mm256_mulhrs_epi16(x256[i], y256[i+4]);
+	z256[i+5] = _mm256_mulhrs_epi16(x256[i], y256[i+5]);
+	z256[i+6] = _mm256_mulhrs_epi16(x256[i], y256[i+6]);
+	z256[i+7] = _mm256_mulhrs_epi16(x256[i], y256[i+7]);
 }
 }
 
@@ -104,10 +125,14 @@ int main() {
 	// y=(int16_t *)memalign(16, N << 1);
 	// z=(int16_t *)memalign(16, N << 1);
 
+	//
+	// x=malloc((N*160) *sizeof(int16_t));
+	// y=malloc((N*160) *sizeof(int16_t));
+	// z=malloc((N*160) *sizeof(int16_t));
 
-	x=malloc((N*160) *sizeof(int16_t));
-	y=malloc((N*160) *sizeof(int16_t));
-	z=malloc((N*160) *sizeof(int16_t));
+	x=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
+	y=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
+	z=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
 
   generate_random(x, y, N);
  // printf("%d\n", x[4]);
@@ -149,37 +174,37 @@ int main() {
   time_stats_t ts;
 
 	FILE *file;
-	// file=fopen("scalar_version","w+");
-	//
- 	//  for (int i = 0; i<N; i++){
-	// 	reset_meas(&ts);
-  //   		for (int j = 0; j<10000; j++){
-  //     			start_meas(&ts);
-  //     			componentwise_multiply_real_scalar(x,y,z,i);
-  //     			stop_meas(&ts);
-  //   		}
-	//
-	// 	fprintf(file, "%lld\n", ts.diff/10000);
-	//
-  // 	}
-	//
-	// fclose(file);
-	//
-	//
-  //       file=fopen("ssE4","w+");
-	//
-	// for (int i = 0; i<N; i++){
-  //  	 	reset_meas(&ts);
-  //   		for (int j = 0; j<10000; j++){
-  //     			start_meas(&ts);
-  //     			componentwise_multiply_real_sse4(x,y,z,i);
-  //     			stop_meas(&ts);
-  //   		}
-	// 	fprintf(file, "%lld\n", ts.diff/10000);
-  // 	}
-	//
-  //       fclose(file);
-	//
+	file=fopen("scalar_version","w+");
+
+ 	 for (int i = 0; i<N; i++){
+		reset_meas(&ts);
+    		for (int j = 0; j<10000; j++){
+      			start_meas(&ts);
+      			componentwise_multiply_real_scalar(x,y,z,i);
+      			stop_meas(&ts);
+    		}
+
+		fprintf(file, "%lld\n", ts.diff/10000);
+
+  	}
+
+	fclose(file);
+
+
+        file=fopen("ssE4","w+");
+
+	for (int i = 0; i<N; i++){
+   	 	reset_meas(&ts);
+    		for (int j = 0; j<10000; j++){
+      			start_meas(&ts);
+      			componentwise_multiply_real_sse4(x,y,z,i);
+      			stop_meas(&ts);
+    		}
+		fprintf(file, "%lld\n", ts.diff/10000);
+  	}
+
+        fclose(file);
+
 
 
 
@@ -194,21 +219,19 @@ int main() {
 		file = fopen("test","a+");
         	fprintf(file, "%lld\n", ts.diff/10000);
 		fclose(file);
-		printf("%d\n", i);
   	}
 
-		for (int i = 0; i<N; i++){
-    		reset_meas(&ts);
-    		for (int j = 0; j<10000; j++){
-			start_meas(&ts);
-      			componentwise_multiply_real_avx2_hrs(u,v,w,i);
-      			stop_meas(&ts);
-    		}
-		file = fopen("test2","a+");
-        	fprintf(file, "%lld\n", ts.diff/10000);
-		fclose(file);
-		printf("%d\n", i);
-  	}
+		// for (int i = 0; i<N; i++){
+    // 		reset_meas(&ts);
+    // 		for (int j = 0; j<10000; j++){
+		// 	start_meas(&ts);
+    //   			componentwise_multiply_real_avx2_hrs(u,v,w,i);
+    //   			stop_meas(&ts);
+    // 		}
+		// file = fopen("test2","a+");
+    //     	fprintf(file, "%lld\n", ts.diff/10000);
+		// fclose(file);
+  	// }
 
 
 	free(x);
