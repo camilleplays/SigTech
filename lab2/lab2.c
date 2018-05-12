@@ -48,25 +48,60 @@ int FIX_MPY(short x,short y){
 //   return(_mm_packs_epi32(cpack_tmp1,cpack_tmp2));
 //
 // }
-
+//FILE *counter; 
 // routines to be written
 void componentwise_multiply_real_scalar(int16_t *x,int16_t *y,int16_t *z,uint16_t N) {
-
   for(int i=0; i<N; i++){
+  //  counter=fopen("scalar_c", "a+");
     z[i]=FIX_MPY(x[i],y[i]);
-		// printf("z[%d] : %d\n", i, z[i]);
+   // fprintf(counter, "%hi\n", z[i]);
+    //fclose(counter);
+ //   printf("z[%d] : %d\n", i, z[i]);
   }
-
+}
+  
+void scalar_print(int16_t *x, int16_t *y, int16_t *z, uint16_t N) {
+//	printf("%d", N);
+	FILE *counter;
+	FILE *X;
+	FILE *Y;
+	counter=fopen("scalar_test", "a+");
+	X=fopen("X", "a+");
+	Y=fopen("Y", "a+");
+ 	for (int i=0;i<N;i++){
+		fprintf(counter, "%hi\n", z[i]);
+		 fprintf(Y, "%hi\n", y[i]);
+		 fprintf(X, "%hi\n", x[i]);
+	}
+	fclose(counter);
+	fclose(X);
+	fclose(Y);
+	
+}
+void ssE4_print(int16_t *x, int16_t *y, int16_t *z, uint16_t N) {
+//      printf("%d", N);
+        FILE *counter2;
+        FILE *X;
+        FILE *Y;
+        counter2=fopen("ssE4_test", "a+");
+        X=fopen("X", "a+");
+        Y=fopen("Y", "a+");
+        for (int i=0;i<N;i++){
+                fprintf(counter2, "%hi\n", z[i]);
+                 fprintf(Y, "%hi\n", y[i]);
+                 fprintf(X, "%hi\n", x[i]);
+        }
+        fclose(counter2);
+        fclose(X);
+        fclose(Y);
 
 }
-
 // routines to be written
 void componentwise_multiply_real_sse4(int16_t *x,int16_t *y,int16_t *z,uint16_t N) {
 
 __m128i *x128 = (__m128i *)x;
 __m128i *y128 = (__m128i *)y;
 __m128i *z128 = (__m128i *)z;
-
 for (int i=0; i<N; i+=8){
   z128[i] = _mm_mulhrs_epi16(x128[i], y128[i]);
 	z128[i+1] = _mm_mulhrs_epi16(x128[i], y128[i+1]);
@@ -76,6 +111,8 @@ for (int i=0; i<N; i+=8){
 	z128[i+5] = _mm_mulhrs_epi16(x128[i], y128[i+5]);
 	z128[i+6] = _mm_mulhrs_epi16(x128[i], y128[i+6]);
 	z128[i+7] = _mm_mulhrs_epi16(x128[i], y128[i+7]);
+
+
 }
 }
 
@@ -182,41 +219,41 @@ int main() {
 
 	FILE *file;
 	file=fopen("scalar_version","w+");
-
  	 for (int i = 0; i<N; i++){
 		reset_meas(&ts);
-    		for (int j = 0; j<10000; j++){
+    		for (int j = 0; j<100; j++){
       			start_meas(&ts);
       			componentwise_multiply_real_scalar(x,y,z,i);
       			stop_meas(&ts);
+ 			scalar_print(x,y,z,i);
     		}
-
-		fprintf(file, "%lld\n", ts.diff/10000);
-
+		fprintf(file, "%lld\n", ts.diff/100);
+		printf("%d\n", i);
+		
+	
   	}
-
 	fclose(file);
-
 
         file=fopen("ssE4","w+");
 
 	for (int i = 0; i<N; i++){
    	 	reset_meas(&ts);
-    		for (int j = 0; j<10000; j++){
+    		for (int j = 0; j<1000; j++){
       			start_meas(&ts);
       			componentwise_multiply_real_sse4(x,y,z,i);
       			stop_meas(&ts);
+			ssE4_print(x,y,z,i);
     		}
-		fprintf(file, "%lld\n", ts.diff/10000);
+		fprintf(file, "%lld\n", ts.diff/1000);
   	}
 
         fclose(file);
 
+*
 
 
 
-
-  	for (int i = 0; i<N; i++){
+/*  	for (int i = 0; i<N; i++){
     		reset_meas(&ts);
     		for (int j = 0; j<10000; j++){
 			start_meas(&ts);
@@ -240,14 +277,14 @@ int main() {
 		// fclose(file);
   	// }
 
-
+*/
 	free(x);
 	free(y);
 	free(z);
 	free(u);
 	free(v);
 	free(w);
-
+	
   return(0);
 
 
