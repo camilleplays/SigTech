@@ -2,6 +2,7 @@
 
 
 
+## Write the basic SIMD code for scalar version,  SSE4 (128-bit SIMD) and AVX2 (256-bit SIMD)
 
 
 ```c++
@@ -39,63 +40,30 @@ for (int i=0; i<N; i++){
 ```
 
 
+## Timing the routines
+
 ```c++
 int main() {
 
 	int N = 1000;
 
   int16_t *x, *y, *z;
-  // x=(int16_t *)memalign(16, N << 1);
-	// y=(int16_t *)memalign(16, N << 1);
-	// z=(int16_t *)memalign(16, N << 1);
-
-	//
-	// x=malloc((N*160) *sizeof(int16_t));
-	// y=malloc((N*160) *sizeof(int16_t));
-	// z=malloc((N*160) *sizeof(int16_t));
-
 	x=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
 	y=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
 	z=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
-
   generate_random(x, y, N);
- // printf("%d\n", x[4]);
- // componentwise_multiply_real_scalar(x, y, z, N);
 
-
-
-
-	// x=(int16_t *)memalign(64, 32);
-	// y=(int16_t *)memalign(64, 32);
-	// z=(int16_t *)memalign(64, 32);
-
-
- // generate_random(x, y, N);
- // componentwise_multiply_real_sse4(x, y, z, N);
-
-
-	// void free(void *x);
-	// void free(void *y);
-	// void free(void *z);
 
   int16_t *u, *v, *w;
 	u=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
 	v=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
 	w=aligned_alloc(32,(N + N*288) *sizeof(int16_t));
-
-
  generate_random(u, v, N);
-// for (int i = 0; i<N; i++){
-//	 printf("%d", u[i]);
-//	printf("%d\n", v[i]);
-//}
-  // componentwise_multiply_real_avx2(u, v, w, 10);
 
-
-  //componentwise_multiply_real_avx2(u,v,w,N);
 
 
   time_stats_t ts;
+
 
 	FILE *file;
 	file=fopen("scalar_version","w+");
@@ -157,3 +125,26 @@ int main() {
 
 }
 ```
+
+
+
+## Graphs
+
+
+
+!['optimized'](scalar_non_optimized.png)
+
+
+Here we implemented optimizations for ssE4 and avx2.
+Those optimizations are in the Makefile, choosing -O3.
+Indeed, we used the following command to figure out that there were a lot of unoptimized iterations.  :
+```bash
+obdjump file -D | less
+```
+
+We can also observe that ssE4's performance is better than avx2. This can be due to the processor of the computer we used or how the memory is allocated.  
+
+WHen using -03 for scalar_version, we obtained the following graph :
+! ['']
+
+We found out  that the compiler was "too smart" and got rid of the multiplications.
