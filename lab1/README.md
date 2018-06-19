@@ -104,19 +104,19 @@ In order to have real randomness, we need to call two functions: randominit and 
 
 #### Q15_cos
 
-![Q15_cos_r.png](work/Q15_cos_r.png)
+![Q15_cos_r.png](Q15_cos_r.png)
 
 
 #### Q15_QPSK
 
-![Q15_QPSK_r.png](work/Q15_QPSK_r.png)
+![Q15_QPSK_r.png](Q15_QPSK_r.png)
 
 
 
 #### Q15_16QAM
 
 
-![Q15_16QAM_r.png](work/Q15_16QAM_r.png)
+![Q15_16QAM_r.png](Q15_16QAM_r.png)
 
 
 
@@ -145,18 +145,18 @@ for (i=0;i<N;i++) {
 ### Q24x17_cos
 
 
-![Q24xQ17_cos_r.png](work/Q24xQ17_cos.png)
+![Q24xQ17_cos_r.png](Q24xQ17_cos.png)
 
 ### Q24xQ17_QPSK
 
-![Q24xQ17_cos_r.png](work/Q24xQ17_QPSK.png)
+![Q24xQ17_cos_r.png](Q24xQ17_QPSK.png)
 
 
 
 
 ### Q24x17QAM
 
-![Q24xQ17_16QAM.png](work/Q24xQ17_16QAM.png)
+![Q24xQ17_16QAM.png](Q24xQ17_16QAM.png)
 
 
 ## Practical Dynamic range
